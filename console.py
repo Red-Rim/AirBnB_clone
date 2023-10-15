@@ -131,6 +131,28 @@ class HBNBCommand(cmd.Cmd):
             count = sum(1 for obj in storage.all().values() if obj.__class__.__name__ == class_name)
             print(count)
 
+    def do_show(self, argt):
+        """
+        Show the details of an instance based on its class name and ID.
+        Usage: show <class name> <id>
+        """
+        args = argt.split()
+        if not argt:
+            print("** class name missing **")
+        elif args[0] not in storage.classes:
+            print("** class doesn't exist **")
+        elif len(args) < 2:
+            print("** instance id missing **")
+        else:
+            class_name = args[0]
+            instance_id = args[1]
+            key = "{}.{}".format(class_name, instance_id)
+            if key in storage.all():
+                print(storage.all()[key])
+            else:
+                print("** no instance found **")
+
+
 
 if __name__ == '__main__':
 

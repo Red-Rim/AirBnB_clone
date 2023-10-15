@@ -16,11 +16,11 @@ from models.user import User
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
-    def do_quit(self, l):
+    def do_quit(self, argt):
         """Quit command to exit the program"""
         return True
 
-    def do_EOF(self, l):
+    def do_EOF(self, argt):
         """EOF command to exit the program"""
         print()
         return True
@@ -29,22 +29,22 @@ class HBNBCommand(cmd.Cmd):
         """Do nothing when an empty line is entered"""
         pass
 
-    def do_create(self, l):
+    def do_create(self, argt):
         """Create a new instance of BaseModel, saves it, and prints the id"""
-        if not l:
+        if not argt:
             print("** class name missing **")
         else:
             try:
-                new_instance = eval(l)()
+                new_instance = eval(argt)()
                 new_instance.save()
                 print(new_instance.id)
             except NameError:
                 print("** class doesn't exist **")
 
-    def do_show(self, l):
+    def do_show(self, argt):
         """Print the string representation of an instance"""
-        args = l.split()
-        if not l:
+        args = argt.split()
+        if not argt:
             print("** class name missing **")
         elif args[0] not in storage.all():
             print("** class doesn't exist **")
@@ -58,10 +58,10 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** no instance found **")
 
-    def do_destroy(self, l):
+    def do_destroy(self, argt):
         """Deletes an instance based on the class name and id"""
-        args = l.split()
-        if not l:
+        args = argt.split()
+        if not argt:
             print("** class name missing **")
         elif args[0] not in storage.all():
             print("** class doesn't exist **")
@@ -76,20 +76,20 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** no instance found **")
 
-    def do_all(self, l):
+    def do_all(self, argt):
         """Print all string representations of instances"""
         objects = storage.all()
-        if not l:
+        if not argt:
             print([str(obj) for obj in objects.values()])
-        elif l not in storage.classes:
+        elif argt not in storage.classes:
             print("** class doesn't exist **")
         else:
             print([str(obj) for key, obj in objects.items() if key.split('.')[0] == l])
 
-    def do_update(self, l):
+    def do_update(self, argt):
         """Update an instance based on the class name and id"""
-        args = l.split()
-        if not l:
+        args = argt.split()
+        if not argt:
             print("** class name missing **")
         elif args[0] not in storage.all():
             print("** class doesn't exist **")
@@ -107,7 +107,8 @@ class HBNBCommand(cmd.Cmd):
                 atr_name = args[2]
                 atr_value = args[3]
                 if atr_name in obj.__class__.__dict__:
-                    atr_value = type(obj.__class__.__dict__[atr_name])(atr_value)
+                    atr_value = type(obj.__class__.__dict__[atr_name])
+                    (atr_value)
                     setattr(obj, atr_name, atr_value)
                     obj.save()
                 else:
@@ -115,5 +116,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** no instance found **")
 
+
 if __name__ == '__main__':
+
     HBNBCommand().cmdloop()

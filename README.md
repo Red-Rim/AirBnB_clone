@@ -1,4 +1,5 @@
-Airbnb Clone Project
+____________________Airbnb Clone Project_____________________
+
  The Airbnb Clone Project is a web application that aims to replicate the core features and functionalities of the popular vacation rental platform Airbnb.
   This project is designed to provide a hands-on experience in building a simplified version of Airbnb,
    allowing users to list their properties for rent and find accommodations for their travel needs.

@@ -31,7 +31,7 @@ class BaseModel:
             models.storage.new(self)
 
     def save(self):
-        """updates the pub instance updated_at with the current datetime"""
+        """updates the pub instance updated_at with current datetime"""
         self.updated_at = datetime.now()
         models.storage.save()
 

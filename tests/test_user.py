@@ -27,7 +27,7 @@ class TestUser(unittest.TestCase):
         self.assertTrue(issubclass(User, BaseModel))
 
     def test_attribute_assignment(self):
-        """assign the attributes"""
+        """assign the attribute"""
         email_value = "test@gmail.com"
         self.user.email = email_value
         password_value = "aabbccddee"

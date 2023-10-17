@@ -19,12 +19,12 @@ class TestCity(unittest.TestCase):
         del self.city
 
     def test_empty_attributes(self):
-        """test empty attr"""
+        """test empty attributes"""
         self.assertEqual(self.city.state_id, "")
         self.assertEqual(self.city.name, "")
 
     def test_attribute_assignment(self):
-        """assign attr"""
+        """assign attributes"""
         state_id_value = self.state.id
         self.city.state_id = state_id_value
         name_value = "Rabat"

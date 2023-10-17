@@ -31,7 +31,7 @@ class FileStorage:
         return FileStorage.__objects
 
     def new(self, obj):
-        """stores an object on the objects dictionary"""
+        """stores object on the objects dictionary"""
         objt = obj.__class__.__name__
         FileStorage.__objects["{}.{}".format(objt, obj.id)] = obj
 

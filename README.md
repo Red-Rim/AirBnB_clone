@@ -9,7 +9,7 @@ Command Interpreter
 
 The command interpreter in AirBnB Clone - The Console is a lightweight, text-based interface designed to interact with and manage property listings, users, and bookings within the system. It provides a convenient way to create, read, update, and delete objects such as users, properties, and bookings.
 
-How to Start
+How to Start:
 
 To start using the AirBnB Clone - The Console, follow these steps:
 Prerequisites: Ensure you have a working Python environment installed on your system. The console is developed in Python and requires a compatible Python installation.

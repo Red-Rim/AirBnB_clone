@@ -15,6 +15,7 @@ from models.user import User
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
+    classes = ["State", "User", "Review", "Place", "City", "Amenity", "BaseModel"]
 
     def do_quit(self, argt):
         """Quit command to exit the program"""
@@ -91,7 +92,7 @@ class HBNBCommand(cmd.Cmd):
         args = argt.split()
         if not argt:
             print("** class name missing **")
-        elif args[0] not in storage.all():
+        elif args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
         elif len(args) < 2:
             print("** instance id missing **")
@@ -106,13 +107,17 @@ class HBNBCommand(cmd.Cmd):
                 obj = objects[obj_key]
                 atr_name = args[2]
                 atr_value = args[3]
-                if atr_name in obj.__class__.__dict__:
-                    atr_value = type(obj.__class__.__dict__[atr_name])
-                    (atr_value)
+                if hasattr(obj, atr_name):
+                    try:
+                        value = type(getattr(obj, atr_name))(atr_value)
+                        setattr(obj, atr_name, value)
+                        obj.save()
+                    except ValueError:
+                        pass
+                else:
                     setattr(obj, atr_name, atr_value)
                     obj.save()
-                else:
-                    print("** attribute doesn't exist **")
+                    #print("** attribute doesn't exist **")
             else:
                 print("** no instance found **")
 
@@ -155,4 +160,4 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == '__main__':
 
-    HBNBCommand().cmdloop()                         
+    HBNBCommand().cmdloop()

@@ -2,6 +2,12 @@
 
 
 """Define FileStorage Class"""
+import os
+import sys
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+sys.path.append(project_root)
+print(sys.path)
+"""Define FileStorage Class"""
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City

@@ -1,53 +1,51 @@
 #!/usr/bin/python3
-"""Defines BaseModel class."""
-from uuid import uuid4
-from datetime import datetime
+"""BaseModel class"""
+import uuid
+import datetime
 import models
 
 
 class BaseModel:
-    """ Base class defines """
-
     def __init__(self, *args, **kwargs):
-        """ Initialize BaseModel.
-
-            Args:
-                *args : no args.
-                **kwargs : key/value pairs.
+        """_summary_
         """
-        arc = "%Y-%m-%dT%H:%M:%S.%f"
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-        if len(kwargs) != 0:
-            for c, u in kwargs.items():
-                if c == "created_at" or c == "updated_at":
-                    self.__dict__[c] = datetime.strptime(u, tf)
-                else:
-                    self.__dict__[c] = u
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.datetime.now()
+        self.updated_at = self.created_at
+        if kwargs:
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    if key == "created_at" or key == "updated_at":
+                        theformat = "%Y-%m-%dT%H:%M:%S.%f"
+                        value = datetime.datetime.strptime(
+                            str(value), theformat)
+                    setattr(self, key.lower(), value)
         else:
             models.storage.new(self)
 
     def save(self):
+        """_summary_
         """
-	Update the 'updated_at' public instance attribute with the current date and time, and save the instance to storage.
-        """
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.datetime.now()
         models.storage.save()
 
     def to_dict(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
         """
-        Returns a dictionary.
-        """
-        obj_dict = self.__dict__.copy()
-        obj_dict['created_at'] = self.created_at.isoformat()
-        obj_dict['updated_at'] = self.updated_at.isoformat()
-        obj_dict['__class__'] = self.__class__.__name__
-        return obj_dict
+        return {
+            **self.__dict__,
+            "__class__": type(self).__name__,
+            "created_at": self.created_at.isoformat("T"),
+            "updated_at": self.updated_at.isoformat("T"),
+        }
 
     def __str__(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
         """
-        Returns a string in format :[<class name>] (<self.id>) <self.__dict__>
-        """
-        cls_name = self.__class__.__name__
-        return "[{}] ({}) {}".format(cls_name, self.id, self.__dict__)
+        return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"

@@ -1,78 +1,139 @@
 #!/usr/bin/python3
-"""
-Defines BaseModel class
-"""
-
-from datetime import datetime
-import models
-from uuid import uuid4
+"""define console module for AirBnB clone"""
 
 
-class BaseModel:
-    """
-    Base class defines common attribute & methods for other classes.
-    """
+import cmd
+from models import storage
+from models.base_model import BaseModel
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 
-    def __init__(self, *args, **kwargs):
-        """
-        Initializes a new instance of the `BaseModel` class.
 
-        Args:
-            *args: Any additional positional arguments, if required.
-            **kwargs: Any additional keyword arguments, if required.
+class HBNBCommand(cmd.Cmd):
+    prompt = "(hbnb) "
 
-        Attributes:
-            id (str): A unique identifier for this object.
-            created_at (datetime): The timestamp indicating when this object was created.
-            updated_at (datetime): The timestamp indicating when this object was last updated.
-        """
-        if kwargs:
-            for key in kwargs:
-                if key == "__class__":
-                    pass
-                elif key == "id":
-                    self.id = kwargs[key]
-                elif key == "created_at":
-                    self.created_at = datetime.strptime(kwargs[key], "\
-%Y-%m-%dT%H:%M:%S.%f")
-                elif key == "updated_at":
-                    self.updated_at = datetime.strptime(kwargs[key], "\
-%Y-%m-%dT%H:%M:%S.%f")
-                else:
-                    setattr(self, key, kwargs[key])
+    def do_quit(self, argt):
+        """Quit command to exit the program"""
+        return True
+
+    def do_EOF(self, argt):
+        """EOF command to exit the program"""
+        print()
+        return True
+
+    def emptyline(self):
+        """Do nothing when an empty line is entered"""
+        pass
+
+    def do_create(self, argt):
+        """Create a new instance of BaseModel, saves it, and prints the id"""
+        if not argt:
+            print("** class name missing **")
         else:
-            self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-            models.storage.new(self)
+            try:
+                new_instance = eval(argt)()
+                new_instance.save()
+                print(new_instance.id)
+            except NameError:
+                print("** class doesn't exist **")
 
-    def __str__(self):
-        """
-        Returns a descriptor of the object.
-        Return:
-        str: A brief description or identifier for the object.
-        """
-        return ("[{}] ({}) {}\
-".format(self.__class__.__name__, self.id, self.__dict__))
+    def do_show(self, argt):
+        """Print the string representation of an instance"""
+        args = argt.split()
+        if not argt:
+            print("** class name missing **")
+        elif args[0] not in storage.all():
+            print("** class doesn't exist **")
+        elif len(args) < 2:
+            print("** instance id missing **")
+        else:
+            obj_key = args[0] + '.' + args[1]
+            objects = storage.all()
+            if obj_key in objects:
+                print(objects[obj_key])
+            else:
+                print("** no instance found **")
 
-    def save(self):
-        """
-        save method that save time update and update
-        the updated_at instance attribute
-        """
-        self.updated_at = datetime.now()
-        models.storage.save()
+    def do_destroy(self, argt):
+        """Deletes an instance based on the class name and id"""
+        args = argt.split()
+        if not argt:
+            print("** class name missing **")
+        elif args[0] not in storage.all():
+            print("** class doesn't exist **")
+        elif len(args) < 2:
+            print("** instance id missing **")
+        else:
+            obj_key = args[0] + '.' + args[1]
+            objects = storage.all()
+            if obj_key in objects:
+                del objects[obj_key]
+                storage.save()
+            else:
+                print("** no instance found **")
 
-    def to_dict(self):
+    def do_all(self, argt):
+        """Print all string representations of instances"""
+        objects = storage.all()
+        if not argt:
+            print([str(obj) for obj in objects.values()])
+        elif argt not in storage.classes:
+            print("** class doesn't exist **")
+        else:
+            print([str(obj) for key, obj in objects.items() if key.split('.')[0] == l])
+
+    def do_update(self, argt):
+        """Update an instance based on the class name and id"""
+        args = argt.split()
+        if not argt:
+            print("** class name missing **")
+        elif args[0] not in storage.all():
+            print("** class doesn't exist **")
+        elif len(args) < 2:
+            print("** instance id missing **")
+        elif len(args) < 3:
+            print("** attribute name missing **")
+        elif len(args) < 4:
+            print("** value missing **")
+        else:
+            obj_key = args[0] + '.' + args[1]
+            objects = storage.all()
+            if obj_key in objects:
+                obj = objects[obj_key]
+                atr_name = args[2]
+                atr_value = args[3]
+                if atr_name in obj.__class__.__dict__:
+                    atr_value = type(obj.__class__.__dict__[atr_name])
+                    (atr_value)
+                    setattr(obj, atr_name, atr_value)
+                    obj.save()
+                else:
+                    print("** attribute doesn't exist **")
+            else:
+                print("** no instance found **")
+
+    def do_count(self, argt):
         """
-        to_dict method that get an prepared dict
-        Return:
-            new dictionary
+        Count the number of instances of a specific class.
+        Usage: <class name>.count()
         """
-        dictionary = {}
-        for key in self.__dict__:
-            dictionary[key] = self.__dict__[key]
-        dictionary["__class__"] = self.__class__.__name__
-        dictionary["created_at"] = self.created_at.isoformat()
-        dictionary["updated_at"] = self.updated_at.isoformat()
-        return dictionary
+        args = argt.split()
+        if not args:
+            print("** class name missing **")
+        elif args[0] not in storage.classes:
+            print("** class doesn't exist **")
+        else:
+        class_name = args[0]
+            count = sum(1 for obj in storage.all().values() if obj.__class__.__name__ == class_name)
+            print(count)
+
+
+if __name__ == '__main__':
+
+    HBNBCommand().cmdloop()
+
+"aa"

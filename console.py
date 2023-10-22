@@ -107,8 +107,7 @@ class HBNBCommand(cmd.Cmd):
                 atr_name = args[2]
                 atr_value = args[3]
                 if atr_name in obj.__class__.__dict__:
-                    atr_value = type(obj.__class__.__dict__[atr_name])
-                    (atr_value)
+                    atr_value = type(obj.__class__.__dict__[atr_name])(atr_value)
                     setattr(obj, atr_name, atr_value)
                     obj.save()
                 else:
@@ -121,15 +120,21 @@ class HBNBCommand(cmd.Cmd):
         Count the number of instances of a specific class.
         Usage: <class name>.count()
         """
-        args = argt.split()
-        if not args:
+        count = 0
+        if not argt:
             print("** class name missing **")
-        elif args[0] not in storage.classes:
-            print("** class doesn't exist **")
         else:
-            class_name = args[0]
-            count = sum(1 for obj in storage.all().values() if obj.__class__.__name__ == class_name)
-            print(count)
+            dict = storage.all()
+            args = argt.split()
+            if not check_class(args[0], "BaseModel"):
+                print(f"** class doesn't exist **")
+            else:
+                for key in dict.keys():
+                    exp = key.split('.')
+                    class_name = exp[0]
+                    if (class_name == args[0]):
+                        count += 1
+                print(count)
 
     def do_show(self, argt):
         """

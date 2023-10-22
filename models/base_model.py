@@ -45,10 +45,10 @@ class BaseModel:
 
     def to_dict(self):
         """returns a dict containing all keys/values of __dict__ of instance"""
-        _dict = {
-            key: val if key not in ["created_at", "updated_at"] else
-            val.strftime("%Y-%m-%dT%H:%M:%S.%f")
-            for key, val in self.__dict__.items()
+        return {
+            "__class__": self.__class__.__name__,
+            **{
+                key: val.isoformat() if isinstance(val, datetime) else
+                val for key, val in self.__dict__.items()
+               }
         }
-        _dict['__class__'] = self.__class__.__name__
-        return _dict

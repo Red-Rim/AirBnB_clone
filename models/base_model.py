@@ -1,17 +1,13 @@
 #!/usr/bin/python3
-
-"""Defines BaseModel class"""
-
-from uuid import uuid4
-import models
+"""
+Build the BaseModel Class
+"""
 from datetime import datetime
-
-prjt = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-sys.path.append(prjt)
-print(sys.path)
+import models
+from uuid import uuid4
 
 
-class BaseModel:
+class BaseModel():
     """
         BaseModel class define common attributes/methods for other classes
 

@@ -6,9 +6,10 @@ from uuid import uuid4
 import models
 from datetime import datetime
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-sys.path.append(project_root)
+prjt = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+sys.path.append(prjt)
 print(sys.path)
+
 
 class BaseModel:
     """

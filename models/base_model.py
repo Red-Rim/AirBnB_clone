@@ -1,13 +1,13 @@
 #!/usr/bin/python3
-"""
-Build the BaseModel Class
-"""
-from datetime import datetime
-import models
+
+"""Defines BaseModel class"""
+
 from uuid import uuid4
+import models
+from datetime import datetime
 
 
-class BaseModel():
+class BaseModel:
     """
         BaseModel class define common attributes/methods for other classes
 
@@ -31,7 +31,7 @@ class BaseModel():
             models.storage.new(self)
 
     def save(self):
-        """updates the pub instance updated_at with the current datetime"""
+        """updates the pub instance updated_at with current datetime"""
         self.updated_at = datetime.now()
         models.storage.save()
 
@@ -41,10 +41,10 @@ class BaseModel():
 
     def to_dict(self):
         """returns a dict containing all keys/values of __dict__ of instance"""
-        return {
-            "__class__": self.__class__.__name__,
-            **{
-                key: val.isoformat() if isinstance(val, datetime) else
-                val for key, val in self.__dict__.items()
-               }
+        _dict = {
+            key: val if key not in ["created_at", "updated_at"] else
+            val.strftime("%Y-%m-%dT%H:%M:%S.%f")
+            for key, val in self.__dict__.items()
         }
+        _dict['__class__'] = self.__class__.__name__
+        return _dict
